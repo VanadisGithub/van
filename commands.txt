@@ -1,0 +1,7 @@
+mysql.server start
+mysql.server stop
+redis-server &
+sh /Users/yaoyuan/IdeaProjects/canal/deployer/bin/startup.sh
+sh /Users/yaoyuan/IdeaProjects/canal/deployer/bin/stop.sh
+sh /usr/local/Cellar/jmeter/5.0/bin/jmeter
+mongod --config /usr/local/etc/mongod.conf
