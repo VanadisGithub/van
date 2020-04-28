@@ -1,5 +1,5 @@
-import com.alibaba.fastjson.JSON;
-import taobao.TaobaoBuyUrl;
+import com.google.common.base.Strings;
+import org.apache.commons.lang3.StringUtils;
 import taobao.TaobaoService;
 
 import java.io.IOException;
@@ -27,52 +27,64 @@ public class Main extends Base {
     }
 
     public static void main(String[] args) {
-//        addAlias();
         if (args.length == 0) {
             welcome();
             showCmd();
             System.out.print("请选择执行命令:\n");
-            String input = getInput();
-            int no = Integer.valueOf(input) - 1;
-            exec(commands.get(no).split(" "));
-            return;
+            while (true) {
+                String input = getInput();
+                excuteCmd(input.split(" "));
+            }
         } else {
-            switch (args[0]) {
-                case "list":
-                    showCmd();
+            excuteCmd(args);
+        }
+
+    }
+
+    private static void excuteCmd(String[] args) {
+        switch (args[0]) {
+            case "ll":
+                showCmd();
+                return;
+            case "add":
+                writeCmd(args[1]);
+                Log.suc("添加成功！");
+                return;
+            case "rm":
+                int no = Integer.valueOf(args[1]) - 1;
+                if (no >= commands.size()) {
+                    Log.err("没有该指令！");
                     return;
-                case "add":
-                    writeCmd(args[1]);
-                    Log.suc("添加成功！");
-                    return;
-                case "rm":
-                    int no = Integer.valueOf(args[1]) - 1;
-                    if (no >= commands.size()) {
-                        Log.err("没有该指令！");
-                        return;
-                    }
-                    removeCmd(no);
-                    Log.suc("删除成功！");
-                    return;
-                case "tb":
-                    List<TaobaoBuyUrl> s = new TaobaoService().coupon("https://detail.tmall.com/item.htm?id=547717653043");
-                    System.out.println(JSON.toJSONString(s));
-                    return;
-                default:
+                }
+                removeCmd(no);
+                Log.suc("删除成功！");
+                return;
+            case "tb":
+                new TaobaoService().coupon(args[1]).forEach(coupon ->
+                        System.out.println(String.format("[%s]%s", coupon.getTitle(), coupon.getBuyUrl())));
+                return;
+            case "init":
+                addAlias();
+                return;
+            default:
+                if (StringUtils.isNumeric(args[0])) {
                     exec(commands.get(Integer.valueOf(args[0]) - 1).split(" "));
                     System.exit(0);
-            }
+                } else {
+                    Log.err("未知命令");
+                }
         }
     }
+
 
     private static String getInput() {
         while (true) {
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
-            if (input == null || "".equals(input)) {
-                continue;
+            if (!Strings.isNullOrEmpty(input)) {
+                checkIsExit(input);
+                return input;
             }
-            checkIsExit(input);
         }
     }
 

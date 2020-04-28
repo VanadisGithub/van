@@ -1,3 +1,5 @@
+import org.fusesource.jansi.Ansi;
+
 /**
  * @program: vanadis
  * @description:
@@ -6,16 +8,20 @@
  */
 public class Log {
 
+    public static void out(String msg, String level, Ansi.Color color) {
+        System.out.println(Ansi.ansi().fg(color).bold().a(String.format("[%s] ", level)).reset().a(msg));
+    }
+
     public static void info(String msg) {
-        System.out.println(String.format("\u001b[34m[INFO]\u001b[37m:%s", msg));
+        out(msg, "INFO", Ansi.Color.BLUE);
     }
 
     public static void suc(String msg) {
-        System.out.println(String.format("\u001b[34m[SUCCESS]\u001b[37m:%s", msg));
+        out(msg, "SUCCESS", Ansi.Color.GREEN);
     }
 
     public static void err(String msg) {
-        System.out.println(String.format("\u001b[34m[ERROR]\u001b[37m:%s", msg));
+        out(msg, "ERROR", Ansi.Color.RED);
     }
 
 }
