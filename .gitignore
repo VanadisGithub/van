@@ -1,0 +1,14 @@
+.classpath
+.project
+.settings/*
+conf/
+target/*
+*.iml
+/logs/
+*.iml
+lib/*
+run/*
+bin/*
+.vertx/
+.settings/
+.idea/
